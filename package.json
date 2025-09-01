@@ -10,7 +10,9 @@
   "dependencies": {
     "@tabler/icons-react": "^3.34.1",
     "class-variance-authority": "^0.7.1",
+    "cloudinary": "^2.7.0",
     "clsx": "^2.1.1",
+    "log4js": "^6.9.1",
     "lucide-react": "^0.542.0",
     "mongodb": "^6.19.0",
     "mongoose": "^8.18.0",

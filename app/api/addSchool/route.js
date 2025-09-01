@@ -1,12 +1,12 @@
 import { connectDB } from "@/lib/mongodb";
 import School from "@/models/School";
-import fs from "fs";
+import { v2 as cloudinary } from "cloudinary";
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export async function POST(req) {
   try {
@@ -23,18 +23,27 @@ export async function POST(req) {
     const file = formData.get("image");
 
     if (!file) {
-      return new Response(JSON.stringify({ error: "Image is required" }), { status: 400 });
+      return new Response(
+        JSON.stringify({ error: "Image is required" }),
+        { status: 400 }
+      );
     }
 
-    // ✅ Convert Blob -> Buffer for Node.js
-    const buffer = Buffer.from(await file.arrayBuffer());
+    // Convert to buffer
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
 
-    // Save file to /public/schoolImages
-    const filename = `${Date.now()}-${file.name}`;
-    const filePath = `public/schoolImages/${filename}`;
-    fs.writeFileSync(filePath, buffer);
-
-    const imagePath = `/schoolImages/${filename}`;
+    // Upload to Cloudinary
+    const uploaded = await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { folder: "schoolImages" },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      );
+      stream.end(buffer);
+    });
 
     // Save record in DB
     const school = new School({
@@ -44,13 +53,13 @@ export async function POST(req) {
       state,
       contact,
       email_id,
-      image: imagePath,
+      image: uploaded.secure_url, // ✅ Cloudinary image URL
     });
 
     await school.save();
 
     return new Response(
-      JSON.stringify({ message: "School added successfully" }),
+      JSON.stringify({ message: "School added successfully", school }),
       { status: 200, headers: { "Content-Type": "application/json" } }
     );
   } catch (err) {
