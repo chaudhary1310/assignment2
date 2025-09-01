@@ -50,9 +50,9 @@ export default function ShowSchools() {
       </div>
 
       {/* ✅ Floating Dock */}
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50">
-        <FloatingDock mobileClassName="translate-y-0" items={links} />
-      </div>
+     <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50">
+  <FloatingDock mobileClassName="translate-y-0" items={links} />
+</div>
 
       {/* ✅ School Cards */}
       <div className="relative  grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 m-20 p-10">
@@ -63,10 +63,10 @@ export default function ShowSchools() {
               className="flex flex-col items-stretch rounded-[16px] border-0 bg-[#313636] p-3"
             >
               <div className="mx-2 flex-1">
-                <div className="relative mt-2 h-120 w-full"> {/* 🔥 changed height */}
+                <div className="relative mt-2 h-100 w-full"> {/* 🔥 changed height */}
                   <img
                     loading="lazy"
-                    className="absolute inset-0 h-full w-full rounded-[16px] bg-[#000000] object-cover contrast-75"
+                    className="absolute inset-0 h-full w-full rounded-[20px] bg-[#000000] object-cover "
                     alt={school.name}
                     src={school.image}
                     style={{ boxShadow: "rgba(0, 0, 0, 0.05) 0px 5px 6px 0px" }} />

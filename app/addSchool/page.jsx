@@ -58,7 +58,7 @@ export default function AddSchool() {
   return (
     <div className="relative h-screen w-full flex flex-col items-center justify-center bg-neutral-900 overflow-hidden">
       {/* Floating Dock */}
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50">
+      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50">
         <FloatingDock mobileClassName="translate-y-0" items={links} />
       </div>
 
